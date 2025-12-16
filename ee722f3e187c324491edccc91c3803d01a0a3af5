@@ -1,0 +1,51 @@
+recommendation-app/main.py
+  2885c7c20c8523ba 25-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.24",
+  "base_commit_sha": "ee722f3e187c324491edccc91c3803d01a0a3af5",
+  "prompts": {
+    "2885c7c20c8523ba": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "10375a31-d9c5-473a-8b67-30c3ca51398f",
+        "model": "gemini-2.5-flash"
+      },
+      "human_author": "sbwu@google.com",
+      "messages": [
+        {
+          "type": "user",
+          "text": "add some random comments to the bottom of recommendations-app/main.py",
+          "timestamp": "2025-12-16T21:48:13.644Z"
+        },
+        {
+          "type": "tool_use",
+          "name": "read_file",
+          "input": {
+            "file_path": "recommendation-app/main.py"
+          },
+          "timestamp": "2025-12-16T21:48:15.712Z"
+        },
+        {
+          "type": "tool_use",
+          "name": "write_file",
+          "input": {
+            "content": "import sys\nimport time\n# Set this constant to  \"True\" to trigger OOM, False to prevent it\nTRIGGER_OOM = True  # Change this to , False to disable OOM triggering\n\ndef trigger_oom():\n    \"\"\"Continuously tries to allocate memory until an OutOfMemoryError occurs (unless TRIGGER_OOM is False).\"\"\"\n\n    chunk_size = 1024 * 1024 * 100  # 10 Megabytes (adjust as needed)\n    large_list = []\n    iteration = 0\n\n    while True:\n      iteration += 1\n      print(f\"Iteration {iteration}: Allocating {chunk_size // (1024 * 1024)} MB...\")  # Progress indicator\n\n      if TRIGGER_OOM:  # Only allocate if TRIGGER_OOM is True\n        large_list.extend([0] * chunk_size)\n\n      time.sleep(0.1)  # Small delay\n\n\nif __name__ == \"__main__\":\n    trigger_oom()\n# This is a random comment.\n# Another random comment here.\n# Just adding some more comments.\n# End of random comments.\n",
+            "file_path": "recommendation-app/main.py"
+          },
+          "timestamp": "2025-12-16T21:48:26.389Z"
+        },
+        {
+          "type": "assistant",
+          "text": "I have added random comments to the bottom of `recommendation-app/main.py`.",
+          "timestamp": "2025-12-16T21:48:27.802Z"
+        }
+      ],
+      "total_additions": 4,
+      "total_deletions": 0,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  }
+}
