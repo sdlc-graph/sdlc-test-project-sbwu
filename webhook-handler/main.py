@@ -28,7 +28,7 @@ def webhook():
         return jsonify({"status": "published", "message_id": message_id}), 200
     except Exception as e:
         print(f"PubSub Error: {e}") # Log error for Cloud Run logs
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e)}),  500
 
     
 

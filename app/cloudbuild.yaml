@@ -1,0 +1,16 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build'
+    args: 
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/app:latest'
+
+# Only upload the image corresponding to the project this is being run from
+images:
+  - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/app:latest'
+
+options:
+  requestedVerifyOption: VERIFIED
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
