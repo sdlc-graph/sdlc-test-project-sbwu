@@ -6,7 +6,7 @@ steps:
       - 'build'
       - '-t'
       - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/app:latest'
-      - '/app'
+      - './app'
 
 # Only upload the image corresponding to the project this is being run from
 images:
