@@ -10,8 +10,8 @@ COPY . /app
 # Install any needed dependencies specified in requirements.txt
 RUN pip install --upgrade pip
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+# Make port 8080 available to the world outside this container
+EXPOSE 8080
 
 # Run the application
 CMD ["python", "app.py"]
