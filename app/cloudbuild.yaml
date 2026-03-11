@@ -10,7 +10,7 @@ steps:
 
 # Only upload the image corresponding to the project this is being run from
 images:
-  - 'staging-qual-us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/app:latest'
+  - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/app:latest'
 
 options:
   requestedVerifyOption: VERIFIED
