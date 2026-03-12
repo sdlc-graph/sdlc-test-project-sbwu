@@ -5,12 +5,12 @@ steps:
     args: 
       - 'build'
       - '-t'
-      - 'staging-qual-us-west1-docker.pkg.dev/sdlc-og-test/og-test-region/app:latest'
+      - 'us-west1-docker.pkg.dev/sdlc-og-test/og-test-region/app:latest'
       - './app'
 
 # Only upload the image corresponding to the project this is being run from
 images:
-  - 'staging-qual-us-west1-docker.pkg.dev/sdlc-og-test/og-test-region/app:latest'
+  - 'us-west1-docker.pkg.dev/sdlc-og-test/og-test-region/app:latest'
 
 options:
   requestedVerifyOption: VERIFIED
