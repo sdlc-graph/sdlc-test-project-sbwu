@@ -2,41 +2,52 @@ steps:
   # Step 1: Build the Docker image
   # The image is tagged with the Git short commit SHA ($SHORT_SHA).
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'BUILD'
+    id: 'Build'
     args: [
       'build',
       '-t',
-      'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/cart-app:${SHORT_SHA}',
+      'us-central1-docker.pkg.dev/ishamirulinda-sdlc/sdlc-demo/cart-app:${SHORT_SHA}',
       './cart-app'  # Path to the directory containing the Dockerfile
     ]
+  # Step 1.5: PUSH the image, and see if that stops the image backoff errors
+  #- name: 'gcr.io/cloud-builders/docker'
+  #  args:
+  #    - 'push'
+  #    - 'us-central1-docker.pkg.dev/ishamirulinda-sdlc/sdlc-demo/cart-app:${SHORT_SHA}'
+  #  id: 'PUSH'
 
-  # Step 2: Push the container image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
+  # Step 2: Update the Kubernetes deployment manifest in the workspace
+  # This command replaces the ':IMAGE_PLACEHOLDER' tag in the deployment.yaml
+  # with the actual $SHORT_SHA for this build. This change is only in the Cloud Build workspace.
+  - name: 'alpine' # Using a small image for shell utilities like sed
+    id: 'UpdateManifest'
+    entrypoint: 'sh'
     args:
-      - 'push'
-      - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/cart-app:${SHORT_SHA}'
-    id: 'PUSH'
-    waitFor: ['BUILD']
+      - '-c'
+      - |
+        echo "Updating deployment.yaml to use image tag: ${SHORT_SHA}"
+        sed -i "s|:IMAGE_PLACEHOLDER|:${SHORT_SHA}|g" cart-app/deployment.yaml
+        echo "--- Updated deployment.yaml for this build ---"
+        cat cart-app/deployment.yaml
+        echo "--- End of deployment.yaml ---"
 
-  # Step 3: Deploy to GKE using gke-deploy
-  - name: "gcr.io/cloud-builders/gke-deploy"
-    id: 'DEPLOY'
+  # Step 3: Deploy to Kubernetes
+  - name: 'gcr.io/cloud-builders/gcloud' # Corrected path
+    id: 'Deploy'
+    entrypoint: 'bash'
     args:
-      - run
-      - --filename=cart-app/deployment.yaml
-      - --image=us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/cart-app:${SHORT_SHA}
-      - --cluster=deployment-1-cluster
-      - --location=us-central1
-      - --project=sdlc-test-project-sbwu
-    waitFor: ['PUSH']
-  - name: 'ubuntu'
-    args: ['sleep', '120']
-    id: 'eepy'
+      - '-c'
+      - |
+        # Get credentials for the GKE cluster
+        gcloud container clusters get-credentials tf-cluster --region us-central1 --project ishamirulinda-sdlc
+
+        # Apply the manifest, kubectl will now use the credentials obtained above
+        kubectl apply -f cart-app/deployment.yaml
 
 # Images to push to Artifact Registry.
 # Cloud Build automatically pushes images listed here after the steps are done.
 images:
-  - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/cart-app:${SHORT_SHA}'
+  - 'us-central1-docker.pkg.dev/ishamirulinda-sdlc/sdlc-demo/cart-app:${SHORT_SHA}'
 
 options:
   requestedVerifyOption: VERIFIED
