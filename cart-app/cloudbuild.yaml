@@ -6,7 +6,7 @@ steps:
     args: 
       - 'build'
       - '-t'
-      - &image 'us-central1-docker.pkg.dev/ishamirulinda-sdlc/sdlc-demo/cart-app:${SHORT_SHA}'
+      - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/cart-app:${SHORT_SHA}'
       - './cart-app'  # Path to the directory containing the Dockerfile
     
 
@@ -41,7 +41,7 @@ steps:
 # Images to push to Artifact Registry.
 # Cloud Build automatically pushes images listed here after the steps are done.
 images:
-  - &image
+  - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/cart-app:${SHORT_SHA}'
 
 options:
   requestedVerifyOption: VERIFIED
