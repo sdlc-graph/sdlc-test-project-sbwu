@@ -6,11 +6,17 @@ steps:
     args: 
       - 'build'
       - '-t'
-      - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/cart-app:${SHORT_SHA}'
+      - &image 'us-central1-docker.pkg.dev/ishamirulinda-sdlc/sdlc-demo/cart-app:${SHORT_SHA}'
       - './cart-app'  # Path to the directory containing the Dockerfile
+    
 
-
-@@ -20,28 +20,28 @@
+  # Step 2: Update the Kubernetes deployment manifest in the workspace
+  # This command replaces the ':IMAGE_PLACEHOLDER' tag in the deployment.yaml
+  # with the actual $SHORT_SHA for this build. This change is only in the Cloud Build workspace.
+  - name: 'alpine' # Using a small image for shell utilities like sed
+    id: 'UpdateManifest'
+    entrypoint: 'sh'
+    args:
       - '-c'
       - |
         echo "Updating deployment.yaml to use image tag: ${SHORT_SHA}"
@@ -35,7 +41,8 @@ steps:
 # Images to push to Artifact Registry.
 # Cloud Build automatically pushes images listed here after the steps are done.
 images:
-  - 'us-central1-docker.pkg.dev/sdlc-test-project-sbwu/sdlc-demo/cart-app:${SHORT_SHA}'
+  - &image
 
 options:
   requestedVerifyOption: VERIFIED
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
